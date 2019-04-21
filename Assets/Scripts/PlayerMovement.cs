@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PlayerMovement : MonoBehaviour {
     public float maxMovementSpeed = 1.0f;
     public float jumpForce = 700f;
+    public float checkRadius;
     public Transform groundCheck;
     public LayerMask whatIsGround;
     public GameObject Sprite;
@@ -34,6 +35,8 @@ public class PlayerMovement : MonoBehaviour {
                 anim.SetBool("Sneezing", false);
         }
 
+        grounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+
         float move = Input.GetAxis("Horizontal");
 
         anim.SetFloat("Speed", Mathf.Abs(move));
@@ -41,7 +44,7 @@ public class PlayerMovement : MonoBehaviour {
         if (grounded && !PlayerSneeze.sneezing)
             rb2d.velocity = new Vector2(move * maxMovementSpeed, rb2d.velocity.y);
         else
-            rb2d.AddForce(new Vector2(move, 0));
+            rb2d.AddForce(new Vector2(move * 10.0f, 0));
 
         if (PlayerSneeze.sneezing && !grounded)
             PlayerSneeze.sneezing = false;
@@ -74,23 +77,6 @@ public class PlayerMovement : MonoBehaviour {
             anim.Play("Death", -1, 0);
         } else if (other.gameObject.tag == "Pill") {
             SceneManager.LoadScene("Level 2", LoadSceneMode.Single);
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.layer != LayerMask.NameToLayer("Ground"))
-            return;
-
-        if (!grounded && collision.gameObject.transform.position.y <= groundCheck.transform.position.y) {
-            grounded = true;
-        }
-    }
-    void OnCollisionExit2D(Collision2D collision) {
-        if (collision.gameObject.layer != LayerMask.NameToLayer("Ground"))
-            return;
-
-        if (grounded && collision.gameObject.transform.position.y <= groundCheck.transform.position.y) {
-            grounded = false;
         }
     }
 
