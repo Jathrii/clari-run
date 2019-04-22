@@ -17,15 +17,30 @@ public class PlayerMovement : MonoBehaviour {
     private bool facingRight = true;
     public bool grounded;
     private Animator anim;
+    private int lives;
 
     void Start() {
         rb2d = GetComponent<Rigidbody2D>();
         anim = Sprite.GetComponent<Animator>();
+        lives = 3;
     }
 
     void FixedUpdate() {
         if (dead)
-            return;
+        {
+            if (lives <= 0)
+            {
+                SceneManager.LoadScene("Intro");
+                dead = false;
+            }
+            else
+            {
+                lives--;
+                this.transform.position = new Vector2(0, -0.41f);
+                dead = false;
+            }
+        }
+            
 
         if (grounded) {
             if (anim.GetBool("Jumping"))
@@ -74,12 +89,20 @@ public class PlayerMovement : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag == "Spike") {
             dead = true;
-            anim.Play("Death", -1, 0);
+            
+           
+            anim.Play("Death", -1, 0)
         } else if (other.gameObject.tag == "Pill") {
             SceneManager.LoadScene("Level 2", LoadSceneMode.Single);
         }
     }
-
+    private IEnumerator WaitForAnimation(Animation animation)
+    {
+        do
+        {
+            yield return null;
+        } while (animation.isPlaying);
+    }
     private void Flip() {
         facingRight = !facingRight;
         Vector3 localScale = Sprite.transform.localScale;
