@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject Sprite;
 
     public static bool dead = false;
+    public static bool dying = false;
 
     private Rigidbody2D rb2d;
     private bool facingRight = true;
@@ -30,7 +31,7 @@ public class PlayerMovement : MonoBehaviour {
             if (lives <= 0) {
                 SceneManager.LoadScene("Intro");
                 dead = false;
-            } else {
+            } else if (!dying) {
                 lives--;
                 this.transform.position = new Vector2(0, -0.41f);
                 dead = false;
@@ -87,6 +88,8 @@ public class PlayerMovement : MonoBehaviour {
             anim.Play("Death", -1, 0);
         } else if (other.gameObject.tag == "Pill") {
             SceneManager.LoadScene("Level 2", LoadSceneMode.Single);
+        } else if (other.gameObject.tag == "mkld") {
+            SceneManager.LoadScene("Outro", LoadSceneMode.Single);
         }
     }
     private IEnumerator WaitForAnimation(Animation animation) {
