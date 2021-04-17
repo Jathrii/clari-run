@@ -2,4 +2,5 @@
 
 ![Haitham](Assets/Sprites/Haitham.png "Haitham")
 
-Haitham is still working on the game, check back later.
+Haitham is middle-aged Egyptian man trying to get medicine for his super sneezes.
+Help Haitham traverse the crowded Egyptian Trafic to reach the pharmacy in the 2D-platformer Clari-run !
